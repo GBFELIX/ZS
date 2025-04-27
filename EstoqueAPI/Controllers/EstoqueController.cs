@@ -16,7 +16,19 @@ namespace EstoqueAPI.Controllers
             _context = context;
         }
 
-
+        [HttpGet("testarconexao")]
+        public IActionResult TestarConexao()
+        {
+            if (_context.Database.CanConnect())
+            {
+                return Ok("Conexão com o banco de dados está funcionando!");
+            }
+            else
+            {
+                return StatusCode(500, "Não foi possível conectar ao banco de dados.");
+            }
+        }
+        
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ItemEstoque>>> GetEstoque()
         {
