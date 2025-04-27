@@ -1,0 +1,10 @@
+# Ignore o appsettings que tem senha
+appsettings.json
+# Ignore pastas compiladas
+bin/
+obj/
+# Ignore pastas de pacotes
+packages/
+# Ignore arquivos de configurações locais
+*.user
+*.vspscc
