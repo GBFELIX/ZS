@@ -1,24 +1,78 @@
-using EstoqueAPI.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Net.Http.Json;
 
-public class EstoqueModel : PageModel
+namespace EstoqueAPI.Pages
 {
-    private readonly HttpClient _httpClient;
-
-    public List<ItemEstoque> ItensEstoque { get; set; } = new();
-
-    public EstoqueModel(IHttpClientFactory httpClientFactory)
+    public class IndexModel : PageModel
     {
-        _httpClient = httpClientFactory.CreateClient("EstoqueAPI");
-    }
-
-    public async Task OnGetAsync()
-    {
-        var resultado = await _httpClient.GetFromJsonAsync<List<ItemEstoque>>("api/estoque");
-        if (resultado != null)
+        public class Produto
         {
-            ItensEstoque = resultado;
+            public int Id { get; set; }
+            public string Nome { get; set; }
+            public int Quantidade { get; set; }
+            public decimal Valor { get; set; }
+        }
+
+        [BindProperty]
+        public Produto NovoProduto { get; set; } = new Produto();
+
+        public List<Produto> Produtos { get; set; } = new List<Produto>();
+
+        public string? ErrorMessage { get; set; }
+
+        // Simulação de banco de dados em memória (static para persistir entre requisições)
+        private static List<Produto> Estoque = new List<Produto>();
+        private static int ProximoId = 1;
+
+        public void OnGet()
+        {
+            Produtos = Estoque.ToList();
+        }
+
+        public IActionResult OnPostAdicionar()
+        {
+            if (string.IsNullOrWhiteSpace(NovoProduto.Nome) || NovoProduto.Quantidade <= 0 || NovoProduto.Valor <= 0)
+            {
+                ErrorMessage = "Todos os campos devem ser preenchidos corretamente.";
+                Produtos = Estoque.ToList();
+                return Page();
+            }
+
+            var existente = Estoque.FirstOrDefault(p => p.Nome.Equals(NovoProduto.Nome, StringComparison.OrdinalIgnoreCase));
+            if (existente != null)
+            {
+                existente.Quantidade += NovoProduto.Quantidade;
+                existente.Valor = NovoProduto.Valor; // Atualiza o valor
+            }
+            else
+            {
+                NovoProduto.Id = ProximoId++;
+                Estoque.Add(new Produto
+                {
+                    Id = NovoProduto.Id,
+                    Nome = NovoProduto.Nome,
+                    Quantidade = NovoProduto.Quantidade,
+                    Valor = NovoProduto.Valor
+                });
+            }
+
+            return RedirectToPage();
+        }
+
+        public IActionResult OnPostRemover()
+        {
+            var existente = Estoque.FirstOrDefault(p => p.Nome.Equals(NovoProduto.Nome, StringComparison.OrdinalIgnoreCase));
+            if (existente != null)
+            {
+                Estoque.Remove(existente);
+            }
+            else
+            {
+                ErrorMessage = "Produto não encontrado.";
+            }
+
+            Produtos = Estoque.ToList();
+            return Page();
         }
     }
 }

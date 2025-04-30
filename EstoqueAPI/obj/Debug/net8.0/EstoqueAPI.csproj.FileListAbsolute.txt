@@ -95,6 +95,8 @@ C:\Users\T-GAMER\OneDrive\Área de Trabalho\Dev\Refatoração paint\EstoqueAPI\o
 C:\Users\T-GAMER\OneDrive\Área de Trabalho\Dev\Refatoração paint\EstoqueAPI\obj\Debug\net8.0\EstoqueAPI.csproj.CoreCompileInputs.cache
 C:\Users\T-GAMER\OneDrive\Área de Trabalho\Dev\Refatoração paint\EstoqueAPI\obj\Debug\net8.0\EstoqueAPI.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\T-GAMER\OneDrive\Área de Trabalho\Dev\Refatoração paint\EstoqueAPI\obj\Debug\net8.0\EstoqueAPI.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\T-GAMER\OneDrive\Área de Trabalho\Dev\Refatoração paint\EstoqueAPI\obj\Debug\net8.0\EstoqueAPI.RazorAssemblyInfo.cache
+C:\Users\T-GAMER\OneDrive\Área de Trabalho\Dev\Refatoração paint\EstoqueAPI\obj\Debug\net8.0\EstoqueAPI.RazorAssemblyInfo.cs
 C:\Users\T-GAMER\OneDrive\Área de Trabalho\Dev\Refatoração paint\EstoqueAPI\obj\Debug\net8.0\EstoqueAPI.sourcelink.json
 C:\Users\T-GAMER\OneDrive\Área de Trabalho\Dev\Refatoração paint\EstoqueAPI\obj\Debug\net8.0\staticwebassets.build.json
 C:\Users\T-GAMER\OneDrive\Área de Trabalho\Dev\Refatoração paint\EstoqueAPI\obj\Debug\net8.0\staticwebassets.development.json
@@ -110,5 +112,3 @@ C:\Users\T-GAMER\OneDrive\Área de Trabalho\Dev\Refatoração paint\EstoqueAPI\o
 C:\Users\T-GAMER\OneDrive\Área de Trabalho\Dev\Refatoração paint\EstoqueAPI\obj\Debug\net8.0\EstoqueAPI.pdb
 C:\Users\T-GAMER\OneDrive\Área de Trabalho\Dev\Refatoração paint\EstoqueAPI\obj\Debug\net8.0\EstoqueAPI.genruntimeconfig.cache
 C:\Users\T-GAMER\OneDrive\Área de Trabalho\Dev\Refatoração paint\EstoqueAPI\obj\Debug\net8.0\ref\EstoqueAPI.dll
-C:\Users\T-GAMER\OneDrive\Área de Trabalho\Dev\Refatoração paint\EstoqueAPI\obj\Debug\net8.0\EstoqueAPI.RazorAssemblyInfo.cache
-C:\Users\T-GAMER\OneDrive\Área de Trabalho\Dev\Refatoração paint\EstoqueAPI\obj\Debug\net8.0\EstoqueAPI.RazorAssemblyInfo.cs

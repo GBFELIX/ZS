@@ -1,65 +1,110 @@
 @page
-@model EstoqueModel
+@model EstoqueAPI.Pages.IndexModel
 @{
-    ViewData["Title"] = "Estoque";
+    ViewData["Title"] = "Gerenciamento de Estoque";
 }
 
-<h1>Lista de Itens em Estoque</h1>
+<div class="container">
+    <h1>Gerenciamento de Estoque</h1>
 
-<div class="estoque-container">
-    @if (Model.ItensEstoque.Any())
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
     {
+        <div class="alert alert-danger">@Model.ErrorMessage</div>
+    }
+
+    <form method="post">
+        <div class="form-container">
+            <input type="text" placeholder="Nome do Produto" asp-for="NovoProduto.Nome" />
+            <input type="number" placeholder="Quantidade" asp-for="NovoProduto.Quantidade" />
+            <input type="number" step="0.01" placeholder="Valor" asp-for="NovoProduto.Valor" />
+            <div class="btn-group">
+                <button type="submit" formaction="/Estoque?handler=Adicionar">Adicionar</button>
+                <button type="submit" formaction="/Estoque?handler=Remover">Remover</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="estoque-lista">
+        <h2>Estoque Atual</h2>
         <table>
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Nome</th>
                     <th>Quantidade</th>
+                    <th>Valor</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.ItensEstoque)
+                @foreach (var produto in Model.Produtos)
                 {
                     <tr>
-                        <td>@item.Id</td>
-                        <td>@item.Nome</td>
-                        <td>@item.Quantidade</td>
+                        <td>@produto.Nome</td>
+                        <td>@produto.Quantidade</td>
+                        <td>R$ @produto.Valor.ToString("F2")</td>
                     </tr>
                 }
             </tbody>
         </table>
-    }
-    else
-    {
-        <p>Nenhum item encontrado.</p>
-    }
+    </div>
 </div>
 
 <style>
-    .estoque-container {
+    .container {
         max-width: 800px;
-        margin: 30px auto;
+        margin: 0 auto;
+        padding: 20px;
         font-family: Arial, sans-serif;
     }
 
-    table {
+    .form-container {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+
+    .form-container input {
+        padding: 10px;
+        font-size: 1rem;
+        flex: 1 1 200px;
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-group button {
+        padding: 10px 20px;
+        font-size: 1rem;
+        cursor: pointer;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+    }
+
+    .btn-group button:hover {
+        background-color: #0056b3;
+    }
+
+    .estoque-lista table {
         width: 100%;
         border-collapse: collapse;
-        margin-top: 15px;
     }
 
-    th, td {
-        padding: 12px;
+    .estoque-lista th, .estoque-lista td {
+        border: 1px solid #ddd;
+        padding: 8px;
         text-align: left;
-        border-bottom: 1px solid #ddd;
     }
 
-    th {
-        background-color: #f0f0f0;
+    .estoque-lista th {
+        background-color: #f2f2f2;
     }
 
-    h1 {
-        text-align: center;
-        color: #333;
+    .alert-danger {
+        color: red;
+        margin-bottom: 10px;
     }
 </style>
