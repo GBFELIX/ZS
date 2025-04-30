@@ -1,0 +1,65 @@
+@page
+@model EstoqueModel
+@{
+    ViewData["Title"] = "Estoque";
+}
+
+<h1>Lista de Itens em Estoque</h1>
+
+<div class="estoque-container">
+    @if (Model.ItensEstoque.Any())
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Quantidade</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.ItensEstoque)
+                {
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>@item.Nome</td>
+                        <td>@item.Quantidade</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>Nenhum item encontrado.</p>
+    }
+</div>
+
+<style>
+    .estoque-container {
+        max-width: 800px;
+        margin: 30px auto;
+        font-family: Arial, sans-serif;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+
+    th, td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f0f0f0;
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+    }
+</style>

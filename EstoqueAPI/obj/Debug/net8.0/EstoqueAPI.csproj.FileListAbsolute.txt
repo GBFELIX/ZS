@@ -110,3 +110,5 @@ C:\Users\T-GAMER\OneDrive\Área de Trabalho\Dev\Refatoração paint\EstoqueAPI\o
 C:\Users\T-GAMER\OneDrive\Área de Trabalho\Dev\Refatoração paint\EstoqueAPI\obj\Debug\net8.0\EstoqueAPI.pdb
 C:\Users\T-GAMER\OneDrive\Área de Trabalho\Dev\Refatoração paint\EstoqueAPI\obj\Debug\net8.0\EstoqueAPI.genruntimeconfig.cache
 C:\Users\T-GAMER\OneDrive\Área de Trabalho\Dev\Refatoração paint\EstoqueAPI\obj\Debug\net8.0\ref\EstoqueAPI.dll
+C:\Users\T-GAMER\OneDrive\Área de Trabalho\Dev\Refatoração paint\EstoqueAPI\obj\Debug\net8.0\EstoqueAPI.RazorAssemblyInfo.cache
+C:\Users\T-GAMER\OneDrive\Área de Trabalho\Dev\Refatoração paint\EstoqueAPI\obj\Debug\net8.0\EstoqueAPI.RazorAssemblyInfo.cs

@@ -4,20 +4,29 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 //banco de dados
-
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
     ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
 
 // adicionar serviçoes de controle
 builder.Services.AddControllers();
+builder.Services.AddRazorPages();
 
-// gerar aplicação
+builder.Services.AddHttpClient("EstoqueAPI", client =>
+{
+    client.BaseAddress = new Uri("http://localhost:5043/"); // ou http://localhost:5000/
+});
+
 var app = builder.Build();
 
-app.UseHttpsRedirection();
+app.UseRouting();
 
 //mapear serviços de controle
 app.MapControllers();
-app.UseAuthorization();
+//mapear serviços de paginação
+app.MapRazorPages();
+
+app.UseHttpsRedirection();
+
+
 app.Run();
