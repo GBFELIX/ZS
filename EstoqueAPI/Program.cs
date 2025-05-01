@@ -3,12 +3,12 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configuração do banco de dados
+// Configuração do db
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
     ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
 
-// Serviços necessários
+// Serviços obrigatorios
 builder.Services.AddControllers();
 builder.Services.AddRazorPages();
 
@@ -19,9 +19,9 @@ builder.Services.AddHttpClient("EstoqueAPI", client =>
 
 var app = builder.Build();
 
-// Middleware na ordem correta
+
 app.UseHttpsRedirection();
-app.UseStaticFiles(); // <-- importante se você tiver CSS ou JS
+app.UseStaticFiles(); 
 app.UseRouting();
 
 // Mapeamento de rotas

@@ -8,7 +8,7 @@ namespace EstoqueAPI.Pages
         public class Produto
         {
             public int Id { get; set; }
-            public string Nome { get; set; }
+            public string Nome { get; set; } = string.Empty;
             public int Quantidade { get; set; }
             public decimal Valor { get; set; }
         }
@@ -20,7 +20,6 @@ namespace EstoqueAPI.Pages
 
         public string? ErrorMessage { get; set; }
 
-        // Simulação de banco de dados em memória (static para persistir entre requisições)
         private static List<Produto> Estoque = new List<Produto>();
         private static int ProximoId = 1;
 
@@ -42,7 +41,7 @@ namespace EstoqueAPI.Pages
             if (existente != null)
             {
                 existente.Quantidade += NovoProduto.Quantidade;
-                existente.Valor = NovoProduto.Valor; // Atualiza o valor
+                existente.Valor = NovoProduto.Valor; 
             }
             else
             {

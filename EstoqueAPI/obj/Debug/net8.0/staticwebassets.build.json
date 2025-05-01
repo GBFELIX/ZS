@@ -1,11 +1,58 @@
 {
   "Version": 1,
-  "Hash": "oESSE2kbm/usCwdZO1kk5DUpXEHi7FVGzQ95OkBRAGs=",
+  "Hash": "1inMorN439u2dvHM18exvG3gdFJkSeZF/YZbufxGvbg=",
   "Source": "EstoqueAPI",
   "BasePath": "_content/EstoqueAPI",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": []
+  "DiscoveryPatterns": [
+    {
+      "Name": "EstoqueAPI\\wwwroot",
+      "Source": "EstoqueAPI",
+      "ContentRoot": "C:\\Users\\T-GAMER\\OneDrive\\Área de Trabalho\\Dev\\Refatoração paint\\EstoqueAPI\\wwwroot\\",
+      "BasePath": "_content/EstoqueAPI",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\Users\\T-GAMER\\OneDrive\\Área de Trabalho\\Dev\\Refatoração paint\\EstoqueAPI\\wwwroot\\script.js",
+      "SourceId": "EstoqueAPI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\T-GAMER\\OneDrive\\Área de Trabalho\\Dev\\Refatoração paint\\EstoqueAPI\\wwwroot\\",
+      "BasePath": "_content/EstoqueAPI",
+      "RelativePath": "script.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\script.js"
+    },
+    {
+      "Identity": "C:\\Users\\T-GAMER\\OneDrive\\Área de Trabalho\\Dev\\Refatoração paint\\EstoqueAPI\\wwwroot\\style.css",
+      "SourceId": "EstoqueAPI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\T-GAMER\\OneDrive\\Área de Trabalho\\Dev\\Refatoração paint\\EstoqueAPI\\wwwroot\\",
+      "BasePath": "_content/EstoqueAPI",
+      "RelativePath": "style.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\style.css"
+    }
+  ]
 }
