@@ -1,6 +1,6 @@
 
     let idAtualizar = null;
-    // Funçao mensagens
+
     function exibirErro(mensagem) {
         const errorMessageDiv = document.getElementById("errorMessage");
         errorMessageDiv.innerHTML = mensagem;
@@ -12,15 +12,11 @@
         RightMessageDiv.style.display = "block";
     }
 
-    // Função para limpar a lista de erros
-    function limparErro() {
+    function limparMsg() {
         const errorMessageDiv = document.getElementById("errorMessage");
         errorMessageDiv.style.display = "none";
-        const RightMessageDiv = document.getElementById("errorMessage");
-        RightMessageDiv.style.display = "none";
     }
 
-    // Função para adicionar produto
     async function adicionarProduto() {
         const nome = document.getElementById("produtoNome").value;
         const quantidade = parseInt(document.getElementById("produtoQuantidade").value);
@@ -129,8 +125,8 @@
                 <td><button class="btn btn-vermelho" onclick="removerProduto(${item.id})">Remover</button></td>
                 <td><button class="btn btn-amarelo" onclick="prepararAtualizacao(${item.id}, '${item.nome}', ${item.quantidade}, ${item.valor})">Editar</button></td>`;
             });
-
-            limparErro(); 
+            
+            limparMsg(); 
         } catch (error) {
             exibirErro("Erro ao carregar estoque.");
         }

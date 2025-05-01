@@ -42,9 +42,9 @@
          @foreach (var produto in Model.Produtos)
                 {
                     <tr>
-                        <td>@produto.Nome</td>
-                        <td>@produto.Quantidade</td>
-                        <td>@produto.Valor</td>
+                        <td class="produto">@produto.Nome</td>
+                        <td class="produto">@produto.Quantidade</td>
+                        <td class="produto">@produto.Valor</td>
                         <td>
                             <button onclick="editarProduto(@produto.Id)">Editar</button>
                             <button onclick="removerProduto(@produto.Id)">Remover</button>
