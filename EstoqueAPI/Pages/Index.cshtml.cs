@@ -61,14 +61,45 @@ namespace EstoqueAPI.Pages
 
         public IActionResult OnPostRemover()
         {
-            var existente = Estoque.FirstOrDefault(p => p.Nome.Equals(NovoProduto.Nome, StringComparison.OrdinalIgnoreCase));
-            if (existente != null)
+            if (string.IsNullOrWhiteSpace(NovoProduto.Nome))
             {
-                Estoque.Remove(existente);
+                ErrorMessage = "Informe o nome do produto para remoção.";
+                Produtos = Estoque.ToList();
+                return Page();
+            }
+
+            var produtoRemover = Estoque.FirstOrDefault(p => p.Nome.Equals(NovoProduto.Nome, StringComparison.OrdinalIgnoreCase));
+            if (produtoRemover != null)
+            {
+                Estoque.Remove(produtoRemover);
             }
             else
             {
                 ErrorMessage = "Produto não encontrado.";
+            }
+
+            Produtos = Estoque.ToList();
+            return Page();
+        }
+
+        public IActionResult OnPostAtualizar()
+        {
+            if (string.IsNullOrWhiteSpace(NovoProduto.Nome) || NovoProduto.Quantidade <= 0 || NovoProduto.Valor <= 0)
+            {
+                ErrorMessage = "Todos os campos devem ser preenchidos corretamente.";
+                Produtos = Estoque.ToList();
+                return Page();
+            }
+
+            var produtoExistente = Estoque.FirstOrDefault(p => p.Nome.Equals(NovoProduto.Nome, StringComparison.OrdinalIgnoreCase));
+            if (produtoExistente != null)
+            {
+                produtoExistente.Quantidade = NovoProduto.Quantidade;
+                produtoExistente.Valor = NovoProduto.Valor;
+            }
+            else
+            {
+                ErrorMessage = "Produto não encontrado para atualização.";
             }
 
             Produtos = Estoque.ToList();

@@ -21,11 +21,11 @@ namespace EstoqueAPI.Controllers
         {
             if (_context.Database.CanConnect())
             {
-                return Ok("Conexão com o banco de dados está funcionando!");
+                return Ok("Conexão com o banco de dados está certa. :D");
             }
             else
             {
-                return StatusCode(500, "Não foi possível conectar ao banco de dados.");
+                return StatusCode(500, "Não conectou com o banco de dados. D:");
             }
         }
         

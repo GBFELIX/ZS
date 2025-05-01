@@ -3,108 +3,303 @@
 @{
     ViewData["Title"] = "Gerenciamento de Estoque";
 }
-
+<head>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
 <div class="container">
-    <h1>Gerenciamento de Estoque</h1>
+  <h1 class="titulo">Gerenciamento de Estoque</h1>
 
-    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
-    {
-        <div class="alert alert-danger">@Model.ErrorMessage</div>
+  <div id="errorMessage" class="mensagem-erro" style="display:none;"></div>
+  <div id="RightMessage" class="mensagem-certo" style="display:none;"></div>
+
+  <form id="estoqueForm">
+    <div class="formulario">
+      <input type="text" id="produtoNome" class="input" placeholder="Nome do Produto" />
+      <input type="number" id="produtoQuantidade" class="input" placeholder="Quantidade" />
+      <input type="number" step="0.01" id="produtoValor" class="input" placeholder="Valor" />
+
+      <div class="botoes">
+        <button type="button" onclick="adicionarProduto()" class="btn btn-verde">Adicionar</button>
+        <button type="button" onclick="atualizarProduto()" class="btn btn-amarelo">Atualizar</button>
+      </div>
+    </div>
+  </form>
+
+  <div class="estoque-lista">
+    <h2 class="subtitulo">Estoque Atual</h2>
+    <table id="estoqueTabela" class="tabela">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Quantidade</th>
+          <th>Valor</th>
+          <th>Remover</th>
+          <th>Editar</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+<script>
+    let idAtualizar = null;
+    // Funçao mensagens
+    function exibirErro(mensagem) {
+        const errorMessageDiv = document.getElementById("errorMessage");
+        errorMessageDiv.innerHTML = mensagem;
+        errorMessageDiv.style.display = "block";
+    }
+    function exibirCerto(mensagem) {
+        const RightMessageDiv = document.getElementById("RightMessage");
+        RightMessageDiv.innerHTML = mensagem;
+        RightMessageDiv.style.display = "block";
     }
 
-    <form method="post">
-        <div class="form-container">
-            <input type="text" placeholder="Nome do Produto" asp-for="NovoProduto.Nome" />
-            <input type="number" placeholder="Quantidade" asp-for="NovoProduto.Quantidade" />
-            <input type="number" step="0.01" placeholder="Valor" asp-for="NovoProduto.Valor" />
-            <div class="btn-group">
-                <button type="submit" formaction="/Estoque?handler=Adicionar">Adicionar</button>
-                <button type="submit" formaction="/Estoque?handler=Remover">Remover</button>
-            </div>
-        </div>
-    </form>
+    // Função para limpar a lista de erros
+    function limparErro() {
+        const errorMessageDiv = document.getElementById("errorMessage");
+        errorMessageDiv.style.display = "none";
+        const RightMessageDiv = document.getElementById("errorMessage");
+        RightMessageDiv.style.display = "none";
+    }
 
-    <div class="estoque-lista">
-        <h2>Estoque Atual</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Nome</th>
-                    <th>Quantidade</th>
-                    <th>Valor</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var produto in Model.Produtos)
-                {
-                    <tr>
-                        <td>@produto.Nome</td>
-                        <td>@produto.Quantidade</td>
-                        <td>R$ @produto.Valor.ToString("F2")</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-</div>
+    // Função para adicionar produto
+    async function adicionarProduto() {
+        const nome = document.getElementById("produtoNome").value;
+        const quantidade = parseInt(document.getElementById("produtoQuantidade").value);
+        const valor = parseFloat(document.getElementById("produtoValor").value);
+
+        if (!nome || quantidade <= 0 || valor <= 0) {
+            exibirErro("Todos os campos devem ser preenchidos corretamente.");
+            return;
+        }
+
+        const novoProduto = { nome, quantidade, valor };
+
+        try {
+            const response = await fetch("http://localhost:5043/api/estoque", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(novoProduto)
+            });
+
+            if (!response.ok) {
+                throw new Error("Erro ao adicionar produto.");
+            }
+            exibirCerto("Produto adicionado com sucesso.");
+            carregarEstoque();
+        } catch (error) {
+            exibirErro(error.message);
+        }
+    }
+
+    async function removerProduto(id) {
+    try {
+        const response = await fetch(`http://localhost:5043/api/estoque/${id}`, {
+            method: "DELETE"
+        });
+
+        if (!response.ok) {
+            throw new Error("Erro ao remover produto.");
+        }
+        exibirCerto("Produto deletado com sucesso.");
+        carregarEstoque();
+    } catch (error) {
+        exibirErro(error.message);
+    }
+}
+
+    function prepararAtualizacao(id, nome, quantidade, valor) {
+        document.getElementById("produtoNome").value = nome;
+        document.getElementById("produtoQuantidade").value = quantidade;
+        document.getElementById("produtoValor").value = valor;
+        idAtualizar = id;
+}
+    async function atualizarProduto() {
+    if (!idAtualizar) {
+        exibirErro("Selecione um produto para atualizar clicando em 'Editar'.");
+        return;
+    }
+
+    const nome = document.getElementById("produtoNome").value;
+    const quantidade = parseInt(document.getElementById("produtoQuantidade").value);
+    const valor = parseFloat(document.getElementById("produtoValor").value);
+
+    if (!nome || quantidade <= 0 || valor <= 0) {
+        exibirErro("Todos os campos devem ser preenchidos corretamente.");
+        return;
+    }
+
+    const produtoAtualizado = { id: idAtualizar, nome, quantidade, valor };
+
+    try {
+        const response = await fetch(`http://localhost:5043/api/estoque/${idAtualizar}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(produtoAtualizado)
+        });
+
+        if (!response.ok) {
+            throw new Error("Erro ao atualizar produto.");
+        }
+
+        idAtualizar = null; 
+        exibirCerto("Produto atualizado com sucesso.");
+        carregarEstoque();
+    } catch (error) {
+        exibirErro(error.message);
+    }
+}
+
+    async function carregarEstoque() {
+        try {
+            const response = await fetch("http://localhost:5043/api/estoque");
+            const estoque = await response.json();
+
+            const tabela = document.getElementById("estoqueTabela").getElementsByTagName('tbody')[0];
+            tabela.innerHTML = "";
+
+            estoque.forEach(item => {
+                const row = tabela.insertRow();
+                row.innerHTML = `
+                <td>${item.nome}</td>
+                <td>${item.quantidade}</td>
+                <td>R$ ${item.valor.toFixed(2)}</td>
+                <td><button class="btn btn-vermelho" onclick="removerProduto(${item.id})">Remover</button></td>
+                <td><button class="btn btn-amarelo" onclick="prepararAtualizacao(${item.id}, '${item.nome}', ${item.quantidade}, ${item.valor})">Editar</button></td>`;
+            });
+
+            limparErro(); 
+        } catch (error) {
+            exibirErro("Erro ao carregar estoque.");
+        }
+    }
+
+    // Carregar o estoque ao iniciar a página
+    window.onload = carregarEstoque;
+</script>
 
 <style>
-    .container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-        font-family: Arial, sans-serif;
-    }
+   body {
+  background-color: #f9f9f9;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+}
 
-    .form-container {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 20px;
-        flex-wrap: wrap;
-    }
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
 
-    .form-container input {
-        padding: 10px;
-        font-size: 1rem;
-        flex: 1 1 200px;
-    }
+.titulo {
+  text-align: center;
+  font-size: 32px;
+  margin-bottom: 30px;
+}
 
-    .btn-group {
-        display: flex;
-        gap: 10px;
-    }
+.subtitulo {
+  font-size: 24px;
+  margin: 20px 0 10px;
+}
 
-    .btn-group button {
-        padding: 10px 20px;
-        font-size: 1rem;
-        cursor: pointer;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 5px;
-    }
+.mensagem-erro {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  border: 1px solid #f5c6cb;
+}
+.mensagem-certo {
+  background-color: #d2d8d2;
+  color: #27a123;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  border: 1px solid #27a123;
+}
+.formulario {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
 
-    .btn-group button:hover {
-        background-color: #0056b3;
-    }
+.input {
+  flex: 1;
+  min-width: 200px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
 
-    .estoque-lista table {
-        width: 100%;
-        border-collapse: collapse;
-    }
+.botoes {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
 
-    .estoque-lista th, .estoque-lista td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: left;
-    }
+.btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
 
-    .estoque-lista th {
-        background-color: #f2f2f2;
-    }
+.btn-verde {
+  background-color: #28a745;
+}
 
-    .alert-danger {
-        color: red;
-        margin-bottom: 10px;
-    }
+.btn-verde:hover {
+  background-color: #218838;
+}
+
+.btn-amarelo {
+  background-color: #ffc107;
+  color: #000;
+}
+
+.btn-amarelo:hover {
+  background-color: #e0a800;
+}
+
+.btn-vermelho {
+  background-color: #dc3545;
+}
+
+.btn-vermelho:hover {
+  background-color: #c82333;
+}
+
+.tabela {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabela th,
+.tabela td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+}
+
+.tabela th {
+  background-color: #f2f2f2;
+}
 </style>
