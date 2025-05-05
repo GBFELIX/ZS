@@ -8,5 +8,6 @@ namespace EstoqueAPI.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public DbSet<ItemEstoque> Estoque { get; set; }
+        public DbSet<Categoria> Categorias { get; set; }
     }
 }
