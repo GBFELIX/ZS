@@ -30,3 +30,5 @@ namespace EstoqueAPI.Controllers
 
             return CreatedAtAction(nameof(GetCategorias), new { id = categoria.Id }, categoria);
         }
+    }
+}
