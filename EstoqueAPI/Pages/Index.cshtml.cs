@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EstoqueAPI.Pages
 {
@@ -58,16 +60,9 @@ namespace EstoqueAPI.Pages
             return RedirectToPage();
         }
 
-        public IActionResult OnPostRemover()
+        public IActionResult OnPostRemover(int produtoId)
         {
-            if (string.IsNullOrWhiteSpace(NovoProduto.Nome))
-            {
-                ErrorMessage = "Informe o nome do produto para remoção.";
-                Produtos = Estoque.ToList();
-                return Page();
-            }
-
-            var produtoRemover = Estoque.FirstOrDefault(p => p.Nome.Equals(NovoProduto.Nome, StringComparison.OrdinalIgnoreCase));
+            var produtoRemover = Estoque.FirstOrDefault(p => p.Id == produtoId);
             if (produtoRemover != null)
             {
                 Estoque.Remove(produtoRemover);
@@ -78,6 +73,19 @@ namespace EstoqueAPI.Pages
             }
 
             Produtos = Estoque.ToList();
+            return RedirectToPage();
+        }
+
+        public IActionResult OnPostPrepararAtualizacao(int produtoId, string produtoNome, int produtoQuantidade, decimal produtoValor)
+        {
+            NovoProduto = new Produto
+            {
+                Id = produtoId,
+                Nome = produtoNome,
+                Quantidade = produtoQuantidade,
+                Valor = produtoValor
+            };
+
             return Page();
         }
 
@@ -90,7 +98,7 @@ namespace EstoqueAPI.Pages
                 return Page();
             }
 
-            var produtoExistente = Estoque.FirstOrDefault(p => p.Nome.Equals(NovoProduto.Nome, StringComparison.OrdinalIgnoreCase));
+            var produtoExistente = Estoque.FirstOrDefault(p => p.Id == NovoProduto.Id);
             if (produtoExistente != null)
             {
                 produtoExistente.Quantidade = NovoProduto.Quantidade;
@@ -102,7 +110,7 @@ namespace EstoqueAPI.Pages
             }
 
             Produtos = Estoque.ToList();
-            return Page();
+            return RedirectToPage();
         }
     }
 }

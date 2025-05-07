@@ -12,13 +12,13 @@ namespace EstoqueAPI.Models
         public string Nome { get; set; } = string.Empty;
 
         [Required]
-        public int Quantidade { get; set; }
+        public int? Quantidade { get; set; }
 
         [Required]
         public decimal Valor { get; set; }
 
         [Required]
-        public int CategoriaId { get; set; }
+        public int? CategoriaId { get; set; }
 
         [ForeignKey("CategoriaId")]
         public Categoria? Categoria { get; set; }

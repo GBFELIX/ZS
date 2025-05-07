@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;    
+using Microsoft.EntityFrameworkCore;
 using EstoqueAPI.Data;
-using EstoqueAPI.Models;    
+using EstoqueAPI.Models;
 
 namespace EstoqueAPI.Controllers
 {
@@ -16,37 +16,50 @@ namespace EstoqueAPI.Controllers
             _context = context;
         }
 
+        // Testa a conexão com o banco de dados
         [HttpGet("testarconexao")]
         public IActionResult TestarConexao()
         {
-            if (_context.Database.CanConnect())
+            try
             {
-                return Ok("Conexão com o banco de dados está certa. :D");
+                if (_context.Database.CanConnect())
+                {
+                    return Ok("Conexão com o banco de dados está certa. :D");
+                }
+                else
+                {
+                    return StatusCode(500, "Não conectou com o banco de dados. D:");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return StatusCode(500, "Não conectou com o banco de dados. D:");
+                return StatusCode(500, $"Erro ao conectar com o banco de dados: {ex.Message}");
             }
         }
-        
+
+        // Retorna todos os itens de estoque
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ItemEstoque>>> GetEstoque()
         {
-            return await _context.Estoque.ToListAsync();
+            var estoque = await _context.Estoque.Include(i => i.Categoria).ToListAsync();
+            return Ok(estoque);
         }
 
+        // Retorna um item específico de estoque
         [HttpGet("{id}")]
-        public async Task<ActionResult<ItemEstoque>> GetEstoque(int id){
-            var itemEstoque = await _context.Estoque.FindAsync(id);
+        public async Task<ActionResult<ItemEstoque>> GetEstoque(int id)
+        {
+            var itemEstoque = await _context.Estoque.Include(i => i.Categoria).FirstOrDefaultAsync(i => i.Id == id);
 
             if (itemEstoque == null)
             {
                 return NotFound();
             }
 
-            return itemEstoque;
+            return Ok(itemEstoque);
         }
 
+        // Adiciona um novo item no estoque
         [HttpPost]
         public async Task<ActionResult<ItemEstoque>> PostEstoque(ItemEstoque itemEstoque)
         {
@@ -55,6 +68,8 @@ namespace EstoqueAPI.Controllers
 
             return CreatedAtAction(nameof(GetEstoque), new { id = itemEstoque.Id }, itemEstoque);
         }
+
+        // Atualiza um item existente no estoque
         [HttpPut("{id}")]
         public async Task<IActionResult> PutEstoque(int id, ItemEstoque itemEstoque)
         {
@@ -84,6 +99,7 @@ namespace EstoqueAPI.Controllers
             return NoContent();
         }
 
+        // Deleta um item do estoque
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEstoque(int id)
         {
@@ -98,6 +114,8 @@ namespace EstoqueAPI.Controllers
 
             return NoContent();
         }
+
+        // Verifica se o item existe
         private bool ItemEstoqueExists(int id)
         {
             return _context.Estoque.Any(e => e.Id == id);

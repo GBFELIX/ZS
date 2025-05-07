@@ -12,15 +12,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddControllers();
 builder.Services.AddRazorPages();
 
-builder.Services.AddHttpClient("EstoqueAPI", client =>
-{
-    client.BaseAddress = new Uri("http://localhost:5043/");
-});
 
 var app = builder.Build();
 
 
-app.UseHttpsRedirection();
 app.UseStaticFiles(); 
 app.UseRouting();
 
