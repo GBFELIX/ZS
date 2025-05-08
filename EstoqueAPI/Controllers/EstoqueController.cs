@@ -7,14 +7,9 @@ namespace EstoqueAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EstoqueController : ControllerBase
+    public class EstoqueController(AppDbContext context) : ControllerBase
     {
-        private readonly AppDbContext _context;
-
-        public EstoqueController(AppDbContext context)
-        {
-            _context = context;
-        }
+        private readonly AppDbContext _context = context;
 
         // Testa a conexão com o banco de dados
         [HttpGet("testarconexao")]
@@ -37,7 +32,6 @@ namespace EstoqueAPI.Controllers
             }
         }
 
-        // Retorna todos os itens de estoque
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ItemEstoque>>> GetEstoque()
         {
@@ -45,7 +39,6 @@ namespace EstoqueAPI.Controllers
             return Ok(estoque);
         }
 
-        // Retorna um item específico de estoque
         [HttpGet("{id}")]
         public async Task<ActionResult<ItemEstoque>> GetEstoque(int id)
         {
@@ -59,7 +52,6 @@ namespace EstoqueAPI.Controllers
             return Ok(itemEstoque);
         }
 
-        // Adiciona um novo item no estoque
         [HttpPost]
         public async Task<ActionResult<ItemEstoque>> PostEstoque(ItemEstoque itemEstoque)
         {
@@ -69,7 +61,6 @@ namespace EstoqueAPI.Controllers
             return CreatedAtAction(nameof(GetEstoque), new { id = itemEstoque.Id }, itemEstoque);
         }
 
-        // Atualiza um item existente no estoque
         [HttpPut("{id}")]
         public async Task<IActionResult> PutEstoque(int id, ItemEstoque itemEstoque)
         {
@@ -99,7 +90,6 @@ namespace EstoqueAPI.Controllers
             return NoContent();
         }
 
-        // Deleta um item do estoque
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEstoque(int id)
         {
@@ -115,7 +105,7 @@ namespace EstoqueAPI.Controllers
             return NoContent();
         }
 
-        // Verifica se o item existe
+
         private bool ItemEstoqueExists(int id)
         {
             return _context.Estoque.Any(e => e.Id == id);

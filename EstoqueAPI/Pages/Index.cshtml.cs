@@ -1,115 +1,109 @@
+using EstoqueAPI.Data; // substitua pelo namespace correto do seu DbContext
+using EstoqueAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Collections.Generic;
-using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace EstoqueAPI.Pages
 {
     public class IndexModel : PageModel
     {
-        public class Produto
+        private readonly AppDbContext _context;
+
+        public IndexModel(AppDbContext context)
         {
-            public int Id { get; set; }
-            public string Nome { get; set; } = string.Empty;
-            public int Quantidade { get; set; }
-            public decimal Valor { get; set; }
+            _context = context;
         }
 
         [BindProperty]
-        public Produto NovoProduto { get; set; } = new Produto();
+        public ItemEstoque NovoProduto { get; set; } = new();
 
-        public List<Produto> Produtos { get; set; } = new List<Produto>();
+        public List<ItemEstoque> Produtos { get; set; } = [];
+        public List<Categoria> ListaCategorias { get; set; } = [];
 
         public string? ErrorMessage { get; set; }
-
-        private static List<Produto> Estoque = new List<Produto>();
-        private static int ProximoId = 1;
+        public string? RightMessage { get; set; }
 
         public void OnGet()
         {
-            Produtos = Estoque.ToList();
+            Produtos = _context.Estoque.Include(p => p.Categoria).ToList();
+            ListaCategorias = _context.Categorias.ToList();
         }
 
         public IActionResult OnPostAdicionar()
         {
-            if (string.IsNullOrWhiteSpace(NovoProduto.Nome) || NovoProduto.Quantidade <= 0 || NovoProduto.Valor <= 0)
+            ListaCategorias = _context.Categorias.ToList();
+
+            if (!ModelState.IsValid || NovoProduto.CategoriaId == null)
             {
                 ErrorMessage = "Todos os campos devem ser preenchidos corretamente.";
-                Produtos = Estoque.ToList();
+                Produtos = _context.Estoque.Include(p => p.Categoria).ToList();
                 return Page();
             }
 
-            var existente = Estoque.FirstOrDefault(p => p.Nome.Equals(NovoProduto.Nome, StringComparison.OrdinalIgnoreCase));
-            if (existente != null)
-            {
-                existente.Quantidade += NovoProduto.Quantidade;
-                existente.Valor = NovoProduto.Valor; 
-            }
-            else
-            {
-                NovoProduto.Id = ProximoId++;
-                Estoque.Add(new Produto
-                {
-                    Id = NovoProduto.Id,
-                    Nome = NovoProduto.Nome,
-                    Quantidade = NovoProduto.Quantidade,
-                    Valor = NovoProduto.Valor
-                });
-            }
+            _context.Estoque.Add(NovoProduto);
+            _context.SaveChanges();
 
             return RedirectToPage();
         }
 
         public IActionResult OnPostRemover(int produtoId)
         {
-            var produtoRemover = Estoque.FirstOrDefault(p => p.Id == produtoId);
-            if (produtoRemover != null)
+            var produto = _context.Estoque.Find(produtoId);
+            if (produto != null)
             {
-                Estoque.Remove(produtoRemover);
+                _context.Estoque.Remove(produto);
+                _context.SaveChanges();
             }
             else
             {
                 ErrorMessage = "Produto não encontrado.";
             }
 
-            Produtos = Estoque.ToList();
             return RedirectToPage();
         }
 
-        public IActionResult OnPostPrepararAtualizacao(int produtoId, string produtoNome, int produtoQuantidade, decimal produtoValor)
+        public IActionResult OnPostPrepararAtualizacao(int produtoId)
         {
-            NovoProduto = new Produto
+            var produto = _context.Estoque.Find(produtoId);
+            if (produto != null)
             {
-                Id = produtoId,
-                Nome = produtoNome,
-                Quantidade = produtoQuantidade,
-                Valor = produtoValor
-            };
+                NovoProduto = produto;
+                ListaCategorias = _context.Categorias.ToList();
+                Produtos = _context.Estoque.Include(p => p.Categoria).ToList();
+                return Page();
+            }
 
-            return Page();
+            ErrorMessage = "Produto não encontrado.";
+            return RedirectToPage();
         }
 
         public IActionResult OnPostAtualizar()
         {
-            if (string.IsNullOrWhiteSpace(NovoProduto.Nome) || NovoProduto.Quantidade <= 0 || NovoProduto.Valor <= 0)
+            ListaCategorias = _context.Categorias.ToList();
+
+            if (!ModelState.IsValid || NovoProduto.CategoriaId == null)
             {
-                ErrorMessage = "Todos os campos devem ser preenchidos corretamente.";
-                Produtos = Estoque.ToList();
+                ErrorMessage = "Todos os campos devem estar preenchidos corretamente.";
+                Produtos = _context.Estoque.Include(p => p.Categoria).ToList();
                 return Page();
             }
 
-            var produtoExistente = Estoque.FirstOrDefault(p => p.Id == NovoProduto.Id);
+            var produtoExistente = _context.Estoque.Find(NovoProduto.Id);
             if (produtoExistente != null)
             {
+                produtoExistente.Nome = NovoProduto.Nome;
                 produtoExistente.Quantidade = NovoProduto.Quantidade;
                 produtoExistente.Valor = NovoProduto.Valor;
+                produtoExistente.CategoriaId = NovoProduto.CategoriaId;
+
+                _context.SaveChanges();
             }
             else
             {
                 ErrorMessage = "Produto não encontrado para atualização.";
             }
 
-            Produtos = Estoque.ToList();
             return RedirectToPage();
         }
     }

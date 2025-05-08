@@ -12,15 +12,17 @@ namespace EstoqueAPI.Models
         public string Nome { get; set; } = string.Empty;
 
         [Required]
-        public int? Quantidade { get; set; }
+        public int Quantidade { get; set; }
 
         [Required]
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Valor { get; set; }
 
-        [Required]
-        public int? CategoriaId { get; set; }
+        // Chave estrangeira para a categoria
+        public int CategoriaId { get; set; }
 
+        // Propriedade de navegação para Categoria
         [ForeignKey("CategoriaId")]
-        public Categoria? Categoria { get; set; }
+        public Categoria Categoria { get; set; } = null!;
     }
 }

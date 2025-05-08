@@ -25,6 +25,9 @@
                 <input type="text" asp-for="NovoProduto.Nome" class="input" placeholder="Nome do Produto" />
                 <input type="number" asp-for="NovoProduto.Quantidade" class="input" placeholder="Quantidade" />
                 <input type="number" step="0.01" asp-for="NovoProduto.Valor" class="input" placeholder="Valor" />
+                <select asp-for="NovoProduto.CategoriaId" asp-items="Model.CategoriasSelectList" class="input">
+                    <option value="">Selecione uma categoria</option>
+                </select>
 
                 <div class="botoes">
                     <button type="submit" asp-page-handler="Adicionar" class="btn btn-verde">Adicionar</button>
@@ -41,7 +44,9 @@
                         <th>Nome</th>
                         <th>Quantidade</th>
                         <th>Valor</th>
+                        <th>Categoria</th>
                         <th>Ações</th>
+                        
                     </tr>
                 </thead>
                 <tbody>
@@ -51,6 +56,7 @@
                             <td>@produto.Nome</td>
                             <td>@produto.Quantidade</td>
                             <td>R$ @produto.Valor</td>
+                            <td>@produto.Categoria?.Nome</td>
                             <td>
                                 <!-- Remoção -->
                                 <form method="post" style="display:inline;">
