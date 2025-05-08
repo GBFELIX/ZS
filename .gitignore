@@ -1,0 +1,17 @@
+# Build Folders (can be compiled output)
+bin/
+obj/
+
+.vs/
+.vscode/
+
+*.cab
+*.msi
+*.msm
+*.msp
+
+Thumbs.db
+Desktop.ini
+
+
+
