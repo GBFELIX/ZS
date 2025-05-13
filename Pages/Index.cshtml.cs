@@ -35,17 +35,17 @@ namespace EstoqueAPI.Pages
         {
             ListaCategorias = _context.Categorias.ToList();
 
-            if (!ModelState.IsValid || NovoProduto.CategoriaId == null)
+            if (ModelState.IsValid)
             {
-                ErrorMessage = "Todos os campos devem ser preenchidos corretamente.";
-                Produtos = _context.Estoque.Include(p => p.Categoria).ToList();
-                return Page();
+                _context.Estoque.Add(NovoProduto);
+                _context.SaveChanges();
+
+                return RedirectToPage();
             }
 
-            _context.Estoque.Add(NovoProduto);
-            _context.SaveChanges();
-
-            return RedirectToPage();
+            ErrorMessage = "Todos os campos devem ser preenchidos corretamente.";
+            Produtos = _context.Estoque.Include(p => p.Categoria).ToList();
+            return Page();
         }
 
         public IActionResult OnPostRemover(int produtoId)
@@ -83,7 +83,7 @@ namespace EstoqueAPI.Pages
         {
             ListaCategorias = _context.Categorias.ToList();
 
-            if (!ModelState.IsValid || NovoProduto.CategoriaId == null)
+            if (!ModelState.IsValid)
             {
                 ErrorMessage = "Todos os campos devem estar preenchidos corretamente.";
                 Produtos = _context.Estoque.Include(p => p.Categoria).ToList();

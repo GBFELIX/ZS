@@ -11,7 +11,6 @@ namespace EstoqueAPI.Controllers
     {
         private readonly AppDbContext _context = context;
 
-        // Testa a conexão com o banco de dados
         [HttpGet("testarconexao")]
         public IActionResult TestarConexao()
         {
@@ -60,7 +59,7 @@ namespace EstoqueAPI.Controllers
 
             return CreatedAtAction(nameof(GetEstoque), new { id = itemEstoque.Id }, itemEstoque);
         }
-
+        
         [HttpPut("{id}")]
         public async Task<IActionResult> PutEstoque(int id, ItemEstoque itemEstoque)
         {
