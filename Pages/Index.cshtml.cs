@@ -35,17 +35,28 @@ namespace EstoqueAPI.Pages
         {
             ListaCategorias = _context.Categorias.ToList();
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _context.Estoque.Add(NovoProduto);
-                _context.SaveChanges();
+                ErrorMessage = "Todos os campos devem ser preenchidos corretamente.";
 
-                return RedirectToPage();
+                foreach (var entry in ModelState)
+                {
+                    foreach (var error in entry.Value.Errors)
+                    {
+                        Console.WriteLine($"Erro em {entry.Key}: {error.ErrorMessage}");
+                    }
+                }
+
+                Produtos = _context.Estoque.Include(p => p.Categoria).ToList();
+                return Page();
             }
 
-            ErrorMessage = "Todos os campos devem ser preenchidos corretamente.";
-            Produtos = _context.Estoque.Include(p => p.Categoria).ToList();
-            return Page();
+            _context.Estoque.Add(NovoProduto);
+            _context.SaveChanges();
+
+            RightMessage = "Produto adicionado com sucesso.";
+
+            return RedirectToPage();
         }
 
         public IActionResult OnPostRemover(int produtoId)

@@ -15,7 +15,6 @@ namespace EstoqueAPI.Models
         public int Quantidade { get; set; }
 
         [Required]
-        [Column(TypeName = "decimal(18,2)")]
         public decimal Valor { get; set; }
 
         public int CategoriaId { get; set; }
